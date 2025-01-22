@@ -19,6 +19,10 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t node-js-sample .
+      - run:
+          name: Save image as tar
+          command: |
+            docker image save node-js-sample | gzip > node-js-sample.tar.gz
       - persist_to_workspace:
           root: .
           paths:
@@ -66,5 +70,9 @@ workflows:
     jobs:
       - say-hello
       - build-docker
-      - test-docker
-      - push-docker
+      - test-docker:
+          requires:
+            - build-docker
+      - push-docker:
+          requires:
+            - test-docker

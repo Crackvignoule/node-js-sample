@@ -52,3 +52,10 @@ workflows:
     jobs:
       - say-hello
       - build-docker
+      - publish-docker:
+          requires:
+            - build-docker
+          filters:
+            branches:
+              only:
+                - master

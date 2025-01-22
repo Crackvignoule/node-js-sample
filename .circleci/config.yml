@@ -11,8 +11,8 @@ jobs:
           command: "echo Hello, World!"
 
   build-docker:
-    docker:
-      - image: docker:stable
+    machine:
+      image: ubuntu-2404:current
     steps:
       - checkout
       - run:

@@ -10,7 +10,7 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
-  build-and-push-docker:
+  build-docker:
     machine:
       image: ubuntu-2404:current
     steps:
@@ -19,14 +19,38 @@ jobs:
           name: Build Docker image
           command: |
             docker build -t node-js-sample .
-      - run:
-          name: Save Docker image
-          command: |
-            docker save node-js-sample | gzip > node-js-sample.tar.gz
       - persist_to_workspace:
           root: .
           paths:
             - node-js-sample.tar.gz
+
+  test-docker:
+    machine:
+      image: ubuntu-2404:current
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load Docker image
+          command: |
+            gunzip -c node-js-sample.tar.gz | docker load
+      - run:
+          name: Run Docker container
+          command: |
+            docker run -d -p 8080:8080 node-js-sample
+      - run:
+          name: Test Docker container
+          command: |
+            sleep 10 && curl -f http://localhost:8080
+
+  push-docker:
+    machine:
+      image: ubuntu-2404:current
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Login to DockerHub
           command: |
@@ -41,4 +65,6 @@ workflows:
   docker-workflow:
     jobs:
       - say-hello
-      - build-and-push-docker
+      - build-docker
+      - test-docker
+      - push-docker

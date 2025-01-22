@@ -33,10 +33,12 @@ jobs:
       image: ubuntu-2404:current
     steps:
       - checkout
+      - attach_workspace:
+          at: /workspace
       - run:
           name: Load Docker image
           command: |
-            docker load < node-js-sample.tar.gz
+            docker load < /workspace/node-js-sample.tar.gz
       - run:
           name: Login to Docker Hub
           command: |

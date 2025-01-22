@@ -56,6 +56,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Load Docker image
+          command: |
+            gunzip -c node-js-sample.tar.gz | docker load
+      - run:
           name: Login to DockerHub
           command: |
             echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin

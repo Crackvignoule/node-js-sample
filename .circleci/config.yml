@@ -55,7 +55,3 @@ workflows:
       - publish-docker:
           requires:
             - build-docker
-          filters:
-            branches:
-              only:
-                - master

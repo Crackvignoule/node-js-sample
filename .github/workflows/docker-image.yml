@@ -3,7 +3,7 @@ name: Build and Publish Docker Image
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -33,5 +33,5 @@ jobs:
         sleep 10
         curl -f http://localhost:8080
 
-    - name: Push Docker Image to Docker Hub
+    - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/node-js-sample:latest
